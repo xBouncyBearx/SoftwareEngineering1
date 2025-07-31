@@ -1,0 +1,473 @@
+{% extends "groups/groups_base.html" %}
+
+{% block title %}Find Learning Partners - Group 2{% endblock %}
+
+{% block extra_css %}
+<style>
+    .search-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fff9 100%);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e0f2e0;
+    }
+
+    .search-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 2px solid #e0f2e0;
+    }
+
+    .search-header h1 {
+        color: #2f6a34;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-header p {
+        color: #70c779;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
+
+    .search-stats {
+        background: #e4fbe4;
+        padding: 1rem;
+        border-radius: 10px;
+        border-left: 4px solid #70c779;
+        margin-bottom: 2rem;
+    }
+
+    .search-stats h3 {
+        color: #2f6a34;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+    }
+
+    .search-stats p {
+        color: #103b0f;
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    .partners-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .partner-card {
+        background: #ffffff;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid #f0f8f0;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .partner-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #b8f2c2 0%, #70c779 100%);
+    }
+
+    .partner-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .partner-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #70c779 0%, #2f6a34 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .partner-name {
+        color: #2f6a34;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .partner-details {
+        margin-bottom: 1rem;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        color: #103b0f;
+    }
+
+    .detail-item i {
+        margin-right: 0.5rem;
+        color: #70c779;
+        width: 16px;
+    }
+
+    .partner-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .tag {
+        background: #e4fbe4;
+        color: #2f6a34;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .btn-connect {
+        background: linear-gradient(135deg, #70c779 0%, #2f6a34 100%);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        flex: 1;
+    }
+
+    .btn-connect:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(47, 106, 52, 0.3);
+    }
+
+    .btn-view {
+        background: transparent;
+        color: #70c779;
+        border: 1px solid #70c779;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        flex: 1;
+    }
+
+    .btn-view:hover {
+        background: #70c779;
+        color: white;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: #f8fff9;
+        border-radius: 15px;
+        border: 2px dashed #b8f2c2;
+    }
+
+    .no-results i {
+        font-size: 3rem;
+        color: #70c779;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .no-results h3 {
+        color: #2f6a34;
+        margin-bottom: 0.5rem;
+        font-size: 1.3rem;
+    }
+
+    .no-results p {
+        color: #70c779;
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-refresh {
+        background: linear-gradient(135deg, #70c779 0%, #2f6a34 100%);
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-refresh:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(47, 106, 52, 0.3);
+    }
+
+    .search-filters {
+        background: #ffffff;
+        padding: 1.5rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid #f0f8f0;
+        margin-bottom: 2rem;
+    }
+
+    .filters-header {
+        color: #2f6a34;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #b8f2c2;
+    }
+
+    .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .filter-label {
+        color: #103b0f;
+        font-weight: 500;
+        min-width: 120px;
+    }
+
+    .filter-value {
+        background: #e4fbe4;
+        color: #2f6a34;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .loading-spinner {
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .spinner {
+        border: 4px solid #e0f2e0;
+        border-top: 4px solid #70c779;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+        .search-container {
+            margin: 1rem;
+            padding: 1.5rem;
+        }
+
+        .search-header h1 {
+            font-size: 2rem;
+        }
+
+        .partners-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filter-group {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="search-container">
+    <div class="search-header">
+        <h1>Find Learning Partners</h1>
+        <p>Discover users who match your learning goals and language proficiency</p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="{% if message.tags == 'success' %}success-message{% else %}error-message{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="search-stats">
+        <h3>🔍 Search Results</h3>
+        <p>Found <strong>{{ match_profiles|length }}</strong> potential learning partner{{ match_profiles|length|pluralize }}</p>
+    </div>
+
+    {% if match_profiles %}
+        <div class="search-filters">
+            <div class="filters-header">📋 Your Search Criteria</div>
+            <div class="filter-group">
+                <span class="filter-label">Language Level:</span>
+                <span class="filter-value">{{ user_profile.language_proficiency|default:"Not specified" }}</span>
+            </div>
+            <div class="filter-group">
+                <span class="filter-label">Learning Goal:</span>
+                <span class="filter-value">{{ user_profile.learning_goal|default:"Not specified" }}</span>
+            </div>
+        </div>
+
+        <div class="partners-grid">
+            {% for profile in match_profiles %}
+            <div class="partner-card">
+                <div class="partner-avatar">
+                    {{ profile.user.username|first|upper }}
+                </div>
+                <div class="partner-name">{{ profile.user.username }}</div>
+                <div class="partner-details">
+                    <div class="detail-item">
+                        <i>🎯</i>
+                        <span>Learning Goal: {{ profile.learning_goal|default:"Not specified" }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <i>🌍</i>
+                        <span>Language Level: {{ profile.language_proficiency|default:"Not specified" }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <i>📅</i>
+                        <span>Available for partnership</span>
+                    </div>
+                    {% if profile.biography %}
+                    <div class="detail-item">
+                        <i>📝</i>
+                        <span>{{ profile.biography|truncatechars:100 }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="partner-tags">
+                    <span class="tag">Language Partner</span>
+                    <span class="tag">Study Buddy</span>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn-connect" onclick="connectWithPartner('{{ profile.user.username }}')">
+                        <i>🤝</i> Connect
+                    </button>
+                    <button class="btn-view" onclick="viewProfile('{{ profile.user.username }}')">
+                        <i>👤</i> View Profile
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-results">
+            <i>🔍</i>
+            <h3>No Matching Partners Found</h3>
+            <p>We couldn't find any users with matching learning goals and language proficiency.</p>
+            <p>Try updating your profile or check back later!</p>
+            <button class="btn-refresh" onclick="location.reload()">
+                <i>🔄</i> Refresh Search
+            </button>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add loading animation when page loads
+    const container = document.querySelector('.search-container');
+    container.style.opacity = '0';
+    container.style.transform = 'translateY(20px)';
+
+    setTimeout(() => {
+        container.style.transition = 'all 0.5s ease';
+        container.style.opacity = '1';
+        container.style.transform = 'translateY(0)';
+    }, 100);
+
+    // Add hover effects to partner cards
+    const partnerCards = document.querySelectorAll('.partner-card');
+    partnerCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px) scale(1.02)';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+});
+
+function connectWithPartner(username) {
+    // Show loading state
+    const button = event.target;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i>⏳</i> Connecting...';
+    button.disabled = true;
+
+    // Simulate connection process
+    setTimeout(() => {
+        alert(`Connection request sent to ${username}! They will be notified of your interest.`);
+        button.innerHTML = originalText;
+        button.disabled = false;
+    }, 1500);
+}
+function viewProfile(username) {
+    // Navigate to user profile page
+    alert(`Viewing profile of ${username}. This feature will be implemented soon!`);
+    // In the future, this could redirect to: window.location.href = `/profile/${username}/`;
+}
+
+// Add smooth scrolling for better UX
+function smoothScrollTo(element) {
+    element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+}
+
+// Add keyboard navigation support
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        // Close any open modals or return to previous page
+        if (confirm('Are you sure you want to leave the search page?')) {
+            history.back();
+        }
+    }
+});
+</script>
+{% endblock %}
+
+)

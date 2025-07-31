@@ -1,0 +1,78 @@
+<!-- templates/chat.html -->
+{% load static %}
+{% load tz %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Realtime Chat</title>
+  <link rel="stylesheet" href="{% static 'g2/css/chat.css' %}" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="site-name">MyChatApp</div>
+    <div class="user-info">Chatting with: {{ other_username }}</div>
+  </nav>
+
+  <main class="main-body">
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="chat-header-username">{{ other_username }}</div>
+        <button class="block-button" id="block-button">Block</button>
+      </div>
+      <ul id="messages">
+      </ul>
+      <form id="chat-form">
+        <input id="chat-input" type="text" placeholder="Type a message…" autocomplete="off" required />
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="footer">
+    © {{ now.year }} MyChatApp
+  </footer>
+
+  <script>
+    // pass the URL route param into JS
+    const otherUsername = "{{ other_username }}";
+    const currentUsername = "{{ user.username }}";
+    const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+    const chatSocket = new WebSocket(
+      wsScheme + '://' + window.location.host +
+      '/ws/chat/' + otherUsername + '/'
+    );
+
+    let chatIsBlocked = false;
+
+    // Helper function to format dates
+    function formatMessageDate(timestamp) {
+      const date = new Date(timestamp);
+      const today = new Date();
+      
+      if (date.toDateString() === today.toDateString()) {
+        return 'Today';
+      } else {
+        return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      }
+    }
+
+    // Helper function to format time
+    function formatTime(timestamp) {
+      return new Date(timestamp).toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit', 
+        hour12: true 
+      });
+    }
+
+    // Scroll to bottom of messages on load
+    // document.addEventListener('DOMContentLoaded', () => {
+    //   const messagesUl = document.getElementById('messages');
+    //   messagesUl.scrollTop = messagesUl.scrollHeight;
+    // });
+  </script>
+  <script src="{% static 'g2/js/chat.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+{% extends "groups/groups_base.html" %}
+
+{% block title %}Complete Your Profile - Group 2{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fff9 100%);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e0f2e0;
+    }
+
+    .profile-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 2px solid #e0f2e0;
+    }
+
+    .profile-header h1 {
+        color: #2f6a34;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-header p {
+        color: #70c779;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    .profile-form {
+        background: #ffffff;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid #f0f8f0;
+    }
+
+    .form-group {
+        margin-bottom: 2rem;
+    }
+
+    .form-group label {
+        display: block;
+        color: #103b0f;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+    }
+
+    .form-textarea {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e0f2e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        min-height: 120px;
+        resize: vertical;
+        transition: all 0.3s ease;
+        background: #fafdfa;
+        font-family: inherit;
+    }
+
+    .form-textarea:focus {
+        outline: none;
+        border-color: #70c779;
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(112, 199, 121, 0.1);
+    }
+
+    .form-textarea::placeholder {
+        color: #a0c0a0;
+    }
+
+    .form-select {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e0f2e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        background: #fafdfa;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .form-select:focus {
+        outline: none;
+        border-color: #70c779;
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(112, 199, 121, 0.1);
+    }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        accent-color: #70c779;
+        cursor: pointer;
+    }
+
+    .checkbox-group label {
+        margin-bottom: 0;
+        font-weight: 500;
+        cursor: pointer;
+        color: #103b0f;
+    }
+
+    .form-actions {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid #e0f2e0;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #70c779 0%, #2f6a34 100%);
+        color: white;
+        border: none;
+        padding: 1rem 3rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(47, 106, 52, 0.3);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(47, 106, 52, 0.4);
+    }
+
+    .btn-secondary {
+        background: transparent;
+        color: #70c779;
+        border: 2px solid #70c779;
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-left: 1rem;
+    }
+
+    .btn-secondary:hover {
+        background: #70c779;
+        color: white;
+    }
+
+    .help-text {
+        font-size: 0.85rem;
+        color: #70c779;
+        margin-top: 0.5rem;
+        font-style: italic;
+    }
+
+    .field-description {
+        background: #e4fbe4;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        border-left: 4px solid #70c779;
+    }
+
+    .field-description h4 {
+        color: #2f6a34;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .field-description p {
+        color: #103b0f;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .success-message {
+        background: #d4edda;
+        color: #155724;
+        padding: 1rem;
+        border-radius: 10px;
+        border: 1px solid #c3e6cb;
+        margin-bottom: 1rem;
+    }
+
+    .error-message {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 1rem;
+        border-radius: 10px;
+        border: 1px solid #f5c6cb;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .profile-container {
+            margin: 1rem;
+            padding: 1.5rem;
+        }
+
+        .profile-header h1 {
+            font-size: 2rem;
+        }
+
+        .profile-form {
+            padding: 1.5rem;
+        }
+
+        .btn-primary, .btn-secondary {
+            width: 100%;
+            margin: 0.5rem 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <h1>Complete Your Profile</h1>
+        <p>Let's set up your partner finding profile!</p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="{% if message.tags == 'success' %}success-message{% else %}error-message{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" class="profile-form">
+        {% csrf_token %}
+        
+        <div class="field-description">
+            <h4>📝 About You</h4>
+            <p>Tell us about yourself and what you're looking for in a learning partner.</p>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.biography.id_for_label }}">Biography</label>
+            {{ form.biography }}
+            <div class="help-text">Share your background, interests, and what you hope to achieve through this partnership.</div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.language_proficiency.id_for_label }}">Language Proficiency Level</label>
+            {{ form.language_proficiency }}
+            <div class="help-text">Select your current language proficiency level (A = Beginner, B = Intermediate, C = Advanced)</div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.learning_goal.id_for_label }}">Learning Goal</label>
+            {{ form.learning_goal }}
+            <div class="help-text">What's your primary learning objective? (A = Basic Communication, B = Fluency, C = Mastery)</div>
+        </div>
+
+        <div class="form-group">
+            <label>Profile Visibility</label>
+            <div class="checkbox-group">
+                {{ form.appear_in_search }}
+                <label for="{{ form.appear_in_search.id_for_label }}">
+                    Allow other users to find me in search results
+                </label>
+            </div>
+            <div class="help-text">When enabled, other users can discover your profile when searching for learning partners.</div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">
+                <i>💾</i> Save Profile
+            </button>
+            <button type="button" class="btn-secondary" onclick="history.back()">
+                <i>←</i> Back
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add custom styling to form elements
+    const textarea = document.querySelector('textarea');
+    if (textarea) {
+        textarea.className = 'form-textarea';
+        textarea.placeholder = 'Tell us about yourself, your learning goals, and what you\'re looking for in a partner...';
+    }
+
+    const selects = document.querySelectorAll('select');
+    selects.forEach(select => {
+        select.className = 'form-select';
+    });
+
+    // Form validation
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const textarea = form.querySelector('textarea');
+        const selects = form.querySelectorAll('select');
+        let isValid = true;
+
+        // Check if required fields are filled
+        if (textarea && !textarea.value.trim()) {
+            textarea.style.borderColor = '#e74c3c';
+            isValid = false;
+        } else if (textarea) {
+            textarea.style.borderColor = '#e0f2e0';
+        }
+
+        selects.forEach(select => {
+            if (!select.value) {
+                select.style.borderColor = '#e74c3c';
+                isValid = false;
+            } else {
+                select.style.borderColor = '#e0f2e0';
+            }
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+            alert('Please fill in all required fields.');
+        }
+    });
+
+    // Real-time character count for biography
+    const textarea = document.querySelector('textarea');
+    if (textarea) {
+        const helpText = textarea.parentNode.querySelector('.help-text');
+        const originalHelpText = helpText.textContent;
+        
+        textarea.addEventListener('input', function() {
+            const charCount = this.value.length;
+            helpText.textContent = `${originalHelpText} (${charCount} characters)`;
+            
+            if (charCount > 500) {
+                helpText.style.color = '#e74c3c';
+            } else {
+                helpText.style.color = '#70c779';
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
